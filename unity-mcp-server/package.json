@@ -16,7 +16,9 @@
     "start": "node dist/index.js"
   },
   "dependencies": {
-    "mcp-framework": "^0.1.29"
+    "@types/ws": "^8.18.0",
+    "mcp-framework": "^0.1.29",
+    "ws": "^8.18.1"
   },
   "devDependencies": {
     "@types/node": "^20.11.24",
