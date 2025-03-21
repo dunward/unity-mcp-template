@@ -141,3 +141,5 @@ package-lock.json
 .eslintcache
 *v8.log
 unity-mcp-server/lib/
+
+*.log
