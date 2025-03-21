@@ -77,6 +77,7 @@ unity-mcp-sample/[Aa]ssets/[Ss]treamingAssets/aa/*
 unity-mcp-server/node_modules/
 unity-mcp-server/.node_modules/
 unity-mcp-server/built/*
+unity-mcp-server/dist/
 unity-mcp-server/tests/cases/rwc/*
 unity-mcp-server/tests/cases/perf/*
 unity-mcp-server/!tests/cases/webharness/compilerToString.js
