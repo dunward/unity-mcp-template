@@ -31,10 +31,24 @@ public class UnityMCPWindow : EditorWindow
         GUILayout.EndHorizontal();
     }
 
-    private static void StartServer()
+    private static async void StartServer()
     {
         server = new TcpListener(System.Net.IPAddress.Parse("127.0.0.1"), 6336);
         server.Start();
+
+        var client = await server.AcceptTcpClientAsync();
+
+        Debug.LogError("Client connected");
+
+        while (client.Connected)
+        {
+            Debug.LogError("Waiting for message...");
+            var stream = client.GetStream();
+            byte[] buffer = new byte[1024];
+            int bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length);
+            string message = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+            Debug.LogError(message);
+        }
     }
 
     private static void StopServer()

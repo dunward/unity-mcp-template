@@ -1,42 +1,34 @@
-import { WebSocketServer, WebSocket } from 'ws';
+import * as Net from 'net';
 
-var client: WebSocket | null = null;
+var unity: Net.Socket | null = null;
 
-export async function setupUnityConnection(port: number) {
-    const wsServer = new WebSocketServer({ port: port });
+export function setupUnityConnection(port: number) {
 
-    wsServer.on('listening', () => {
-        console.error(`Unity Connection listening on ${port}`);
-    });
+    unity = new Net.Socket();
     
-    wsServer.on('connection', (ws) => {
-        client = ws;
-        ws.on('error', (error) => {
-            console.error('Unity Connection Error:', error);
-        });
-        ws.on('close', () => {
-            client = null;
-            console.error('Unity Connection disconnected');
-        });
-
-        console.error('Unity Connection connected');
+    unity.connect(port, '127.0.0.1', () => {
+        console.log('Connected to TCP server');
     });
 
-    wsServer.on('error', (error) => {
-        console.error('Unity Connection Error!', error);
+    // 서버로부터 메시지를 받았을 때
+    unity.on('data', (data) => {
+        console.log('Received: ' + data.toString());
     });
 
-    await new Promise<void>((resolve) => {
-        wsServer.once('listening', () => {
-            console.error(`Unity Connection listening on ${port}`);
-            resolve();
-        });
+    // 오류 처리
+    unity.on('error', (error) => {
+        console.error('TCP Client error:', error);
+    });
+
+    // 연결 종료
+    unity.on('close', () => {
+        console.log('Connection closed');
     });
 }
 
 export function sendToUnity(message: string) {
-    if (client) {
-        client.send(message);
+    if (unity) {
+        unity.write(message);
         return "Successfully sent message to Unity";
     } else {
         return "Unity Connection not available";
