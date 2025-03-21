@@ -10,17 +10,14 @@ export function setupUnityConnection(port: number) {
         console.log('Connected to TCP server');
     });
 
-    // 서버로부터 메시지를 받았을 때
     unity.on('data', (data) => {
         console.log('Received: ' + data.toString());
     });
 
-    // 오류 처리
     unity.on('error', (error) => {
         console.error('TCP Client error:', error);
     });
 
-    // 연결 종료
     unity.on('close', () => {
         console.log('Connection closed');
     });
