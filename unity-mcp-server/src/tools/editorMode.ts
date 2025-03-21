@@ -1,5 +1,6 @@
 import { MCPTool } from "mcp-framework";
 import { z } from "zod";
+import * as UnityConnection from "../unity/unityConnection.js";
 
 interface EditorModeInput {
   message: string;
@@ -18,7 +19,7 @@ class EditorModeTool extends MCPTool<EditorModeInput> {
   };
 
   async execute(input: EditorModeInput) {
-    return `Processed: ${input.message}`;
+    return UnityConnection.sendToUnity(input.message);
   }
 }
 
