@@ -26,6 +26,7 @@ unity-mcp-sample/[Aa]ssets/Plugins/Editor/JetBrains*
 
 # Visual Studio cache directory
 unity-mcp-sample/.vs/
+unity-mcp-sample/.vscode/
 
 # Gradle cache directory
 unity-mcp-sample/.gradle/
