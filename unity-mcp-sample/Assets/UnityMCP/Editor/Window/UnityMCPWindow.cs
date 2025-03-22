@@ -6,7 +6,8 @@ using UnityEngine;
 
 public class UnityMCPWindow : EditorWindow
 {
-    private static TcpListener server;
+    private TcpListener server;
+    private TcpClient client;
 
     [MenuItem("UnityMCP/Show Window")]
     public static void ShowWindow()
@@ -16,15 +17,11 @@ public class UnityMCPWindow : EditorWindow
 
     private void OnGUI()
     {
+        GUILayout.Space(10);
+        UnityMCPGUI.Title();
+        UnityMCPGUI.Connection(server, client, StartServer, StopServer);
+        GUILayout.Space(10);
         GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Start Server"))
-        {
-            StartServer();
-        }
-        if (GUILayout.Button("Stop Server"))
-        {
-            StopServer();
-        }
         GUILayout.EndHorizontal();
     }
 
@@ -37,7 +34,7 @@ public class UnityMCPWindow : EditorWindow
 
         while (true)
         {
-            var client = await server.AcceptTcpClientAsync();
+            client = await server.AcceptTcpClientAsync();
 
             Debug.LogError("MCP connected");
 
@@ -55,7 +52,7 @@ public class UnityMCPWindow : EditorWindow
                 var buffer = new byte[1024];
                 var bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length);
 
-                if (bytesRead == 0) // 연결이 끊어졌다면
+                if (bytesRead == 0)
                 {
                     Debug.LogError("Client disconnected.");
                     break;
