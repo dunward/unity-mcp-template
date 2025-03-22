@@ -9,6 +9,8 @@ Create more tools your own!
 ## Quick Start
 unity-mcp-sample is a Unity example project. To minimize version-related issues and ensure compatibility with legacy versions, it does not use packages like NewtonsoftJSON. Additionally, the EditorWindow is implemented using IMGUI. The MCP can be managed through the UnityMCP-ShowWindow at the top.
 
+<img src="https://github.com/user-attachments/assets/48a247b6-29ac-466a-ac7a-afdad377a84f" width=30%, height=30%>
+
 ### Build MCP Server
 within the unity-mcp-server
 ```
@@ -37,7 +39,6 @@ Refer to CreateObjectTools and create the tool you want.
 #### Typescript
 Refer to createObject and create the tool you want.
 
----
 ## TODO List
 - Enable Unity to send result messages to MCP
 - Change TCP structure (currently implemented with client-server reversed due to a bug in the TypeScript SDK)
