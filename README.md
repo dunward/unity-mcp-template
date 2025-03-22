@@ -10,3 +10,5 @@ Create more tools your own!
 ## TODO List
 - Enable Unity to send result messages to MCP
 - Change TCP structure (currently implemented with client-server reversed due to a bug in the TypeScript SDK)
+  - Unity (Current : TCP Server, TODO : TCP Client)
+  - MCP (Current : TCP Client, TODO : TCP Server)
