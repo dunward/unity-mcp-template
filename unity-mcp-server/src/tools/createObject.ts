@@ -28,7 +28,10 @@ class CreateObjectTool extends MCPTool<CreateObjectInput> {
   };
 
   async execute(input: CreateObjectInput) {
-    return JSON.stringify({ name: this.name, ...input });
+    return UnityConnection.sendToUnity(JSON.stringify({
+      name: this.name,
+      format: JSON.stringify(input)
+    }));
   }
 }
 

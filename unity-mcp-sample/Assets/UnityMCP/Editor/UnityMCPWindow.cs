@@ -1,8 +1,6 @@
-using System;
 using System.Net.Sockets;
-using System.Net.WebSockets;
 using System.Text;
-using System.Threading;
+using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
@@ -30,7 +28,6 @@ public class UnityMCPWindow : EditorWindow
         GUILayout.EndHorizontal();
     }
 
-
     private async void StartServer()
     {
         server = new TcpListener(System.Net.IPAddress.Parse("127.0.0.1"), 6336);
@@ -38,30 +35,55 @@ public class UnityMCPWindow : EditorWindow
 
         Debug.LogError("Unity MCP ready");
 
-        var client = await server.AcceptTcpClientAsync();
-
-        Debug.LogError("MCP connected");
-
-        while (client.Connected)
+        while (true)
         {
-            var stream = client.GetStream();
-            byte[] buffer = new byte[1024];
-            int bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length);
-            string message = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-            Debug.LogError(message);
+            var client = await server.AcceptTcpClientAsync();
 
-            switch (message)
+            Debug.LogError("MCP connected");
+
+            _ = HandleClientAsync(client);
+        }
+    }
+
+    private async Task HandleClientAsync(TcpClient client)
+    {
+        try
+        {
+            while (client.Connected)
             {
-                case "start":
-                    EditorApplication.isPlaying = true;
+                var stream = client.GetStream();
+                var buffer = new byte[1024];
+                var bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length);
+
+                if (bytesRead == 0) // 연결이 끊어졌다면
+                {
+                    Debug.LogError("Client disconnected.");
                     break;
-                case "pause":
-                    EditorApplication.isPaused = true;
-                    break;
-                case "stop":
-                    EditorApplication.isPlaying = false;
-                    break;
+                }
+
+                var message = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                Debug.LogError($"Message Received: {message}");
+
+                var match = JsonUtility.FromJson<BaseTool>(message);
+
+                Debug.LogError($"{match.name}, {match.format}");
+
+                switch (match.name)
+                {
+                    case "create_object_tool":
+                        CreateObjectTools.CreateObject(match.format);
+                        break;
+                }
             }
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError($"Error in client communication: {ex.Message}");
+        }
+        finally
+        {
+            client.Close();
+            Debug.LogError("Client connection closed.");
         }
     }
 
