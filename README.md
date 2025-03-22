@@ -5,3 +5,8 @@ This is a simple example project demonstrating interaction between a TypeScript-
 ased MCP server and Unity. You can build and configure your own tools to expand and develop further.
 
 Create more tools your own!
+
+---
+## TODO List
+- Enable Unity to send result messages to MCP
+- Change TCP structure (currently implemented with client-server reversed due to a bug in the TypeScript SDK)
