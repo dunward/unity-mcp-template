@@ -1,3 +1,4 @@
+![](https://badge.mcpx.dev 'MCP') ![GitHub License](https://img.shields.io/github/license/dunward/unity-mcp-template)
 # Unity MCP Template
 ![mcp-template-ezgif com-resize](https://github.com/user-attachments/assets/eb51b904-3301-4c88-9f7d-8ca3333024f3)
 
