@@ -68,7 +68,7 @@ public class UnityMCPWindow : EditorWindow
                 switch (match.name)
                 {
                     case "create_object_tool":
-                        CreateObjectTools.CreateObject(match.format);
+                        await Result(CreateObjectTools.CreateObject(match.format));
                         break;
                 }
             }
@@ -82,6 +82,13 @@ public class UnityMCPWindow : EditorWindow
             client.Close();
             Debug.LogError("Client connection closed.");
         }
+    }
+
+    private async Task Result(string resultLog)
+    {
+        var stream = client.GetStream();
+        var buffer = Encoding.UTF8.GetBytes(resultLog);
+        await stream.WriteAsync(buffer, 0, buffer.Length);
     }
 
     private void StopServer()

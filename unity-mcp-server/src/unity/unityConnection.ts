@@ -10,10 +10,6 @@ export function setupUnityConnection(port: number) {
         console.error('[MCP] Connected to TCP server');
     });
 
-    unity.on('data', (data) => {
-        console.error('[MCP] Received: ' + data.toString());
-    });
-
     unity.on('error', (error) => {
         console.error('[MCP] TCP Client error:', error);
     });
@@ -23,11 +19,22 @@ export function setupUnityConnection(port: number) {
     });
 }
 
-export function sendToUnity(message: string) {
-    if (unity) {
-        unity.write(message);
-        return `[MCP] Successfully sent message to Unity: ${message}`;
-    } else {
-        return "[MCP] Unity Connection not available";
-    }
+export function sendToUnity(message: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+        if (!unity) {
+            reject("[MCP] Unity Connection not available");
+            return;
+        }
+
+        const onData = (data: Buffer) => {
+            resolve(`[MCP] Response from Unity: ${data.toString()}`);
+        };
+    
+        unity.once('data', onData);
+        unity.write(message, (err) => {
+            if (err) {
+                reject(`[MCP] Failed to send message: ${err.message}`);
+            }
+        });
+    });
 }

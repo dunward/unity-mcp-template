@@ -8,7 +8,7 @@ public static class CreateObjectTools
         public Vector3 position;
     }
 
-    public static void CreateObject(string format)
+    public static string CreateObject(string format)
     {
         var input = JsonUtility.FromJson<CreateObjectInput>(format);
 
@@ -16,13 +16,15 @@ public static class CreateObjectTools
         {
             case "cube":
                 GameObject.CreatePrimitive(PrimitiveType.Cube).transform.position = input.position;
-                break;
+                return "Successfully created cube";
             case "sphere":
                 GameObject.CreatePrimitive(PrimitiveType.Sphere).transform.position = input.position;
-                break;
+                return "Successfully created sphere";
             case "capsule":
                 GameObject.CreatePrimitive(PrimitiveType.Capsule).transform.position = input.position;
-                break;
+                return "Successfully created capsule";
+            default:
+                return "Invalid shape";
         }
     }
 }
