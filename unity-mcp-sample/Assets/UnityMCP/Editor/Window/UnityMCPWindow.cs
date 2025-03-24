@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,7 +8,7 @@ using UnityEngine;
 public class UnityMCPWindow : EditorWindow
 {
     private TcpListener server;
-    private TcpClient client;
+    private List<TcpClient> clients = new List<TcpClient>();
 
     [MenuItem("UnityMCP/Show Window")]
     public static void ShowWindow()
@@ -19,7 +20,7 @@ public class UnityMCPWindow : EditorWindow
     {
         GUILayout.Space(10);
         UnityMCPGUI.Title();
-        UnityMCPGUI.Connection(server, client, StartServer, StopServer);
+        UnityMCPGUI.Connection(server, clients, StartServer, StopServer);
         GUILayout.Space(10);
         GUILayout.BeginHorizontal();
         GUILayout.EndHorizontal();
@@ -34,11 +35,16 @@ public class UnityMCPWindow : EditorWindow
 
         while (true)
         {
-            client = await server.AcceptTcpClientAsync();
+            var client = await server.AcceptTcpClientAsync();
+            Debug.LogError($"{client.Client.RemoteEndPoint} is connected");
+            lock (clients)
+            {
+                clients.Add(client);
 
-            Debug.LogError("MCP connected");
+                Debug.LogError("MCP connected");
 
-            _ = HandleClientAsync(client);
+                _ = HandleClientAsync(client);
+            }
         }
     }
 
@@ -68,7 +74,10 @@ public class UnityMCPWindow : EditorWindow
                 switch (match.name)
                 {
                     case "create_object_tool":
-                        await Result(CreateObjectTools.CreateObject(match.format));
+                        await Result(client, CreateObjectTools.CreateObject(match.format));
+                        break;
+                    case "editor_mode_tool":
+                        await Result(client, "ping");
                         break;
                 }
             }
@@ -79,13 +88,15 @@ public class UnityMCPWindow : EditorWindow
         }
         finally
         {
+            clients.Remove(client);
             client.Close();
             Debug.LogError("Client connection closed.");
         }
     }
 
-    private async Task Result(string resultLog)
+    private async Task Result(TcpClient client, string resultLog)
     {
+            Debug.LogError($"Send to {client.Client.RemoteEndPoint}");
         var stream = client.GetStream();
         var buffer = Encoding.UTF8.GetBytes(resultLog);
         await stream.WriteAsync(buffer, 0, buffer.Length);
@@ -94,5 +105,14 @@ public class UnityMCPWindow : EditorWindow
     private void StopServer()
     {
         server.Stop();
+
+        lock (clients)
+        {
+            foreach (var client in clients)
+            {
+                client.Close();
+            }
+            clients.Clear();
+        }
     }
 }

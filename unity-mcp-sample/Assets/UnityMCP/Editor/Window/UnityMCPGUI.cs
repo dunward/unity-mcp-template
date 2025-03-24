@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEditor;
 
@@ -13,7 +15,7 @@ public static class UnityMCPGUI
         GUILayout.Label("Unity MCP", labelStyle);
     }
 
-    public static void Connection(System.Net.Sockets.TcpListener server, System.Net.Sockets.TcpClient client, System.Action startServer, System.Action stopServer)
+    public static void Connection(System.Net.Sockets.TcpListener server, List<System.Net.Sockets.TcpClient> clients, System.Action startServer, System.Action stopServer)
     {
         var groupStyle = new GUIStyle(GUI.skin.box);
         groupStyle.padding = new RectOffset(10, 10, 10, 10);
@@ -45,13 +47,13 @@ public static class UnityMCPGUI
             GUILayout.Label("Unity Status : <color=red>Offline</color>", serverState);
         }
 
-        if (client != null && client.Connected)
+        if (clients.Count > 0)
         {
-            GUILayout.Label("MCP Status : <color=green>Connected</color>", serverState);
+            GUILayout.Label($"MCP Status : <color=green>{clients.Count} MCPs Connected</color>", serverState);
         }
         else
         {
-            GUILayout.Label("MCP Status : <color=red>Disconnected</color>", serverState);
+            GUILayout.Label("MCP Status : <color=red>0 MCPs</color>", serverState);
         }
 
         GUILayout.BeginHorizontal();
