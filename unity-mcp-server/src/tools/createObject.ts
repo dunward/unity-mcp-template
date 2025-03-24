@@ -15,7 +15,6 @@ class CreateObjectTool extends MCPTool<CreateObjectInput> {
     shape: {
       type: z.string(),
       description: "3d model shape",
-      enum: ["cube", "sphere", "capsule", "cylinder", "plane", "quad"],
     },
     position: {
       type: z.object({
@@ -23,7 +22,7 @@ class CreateObjectTool extends MCPTool<CreateObjectInput> {
         y: z.number(),
         z: z.number(),
       }),
-      description: "3d model positio",
+      description: "3d model position",
     },
   };
 
