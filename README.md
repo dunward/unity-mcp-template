@@ -1,4 +1,4 @@
-![](https://badge.mcpx.dev 'MCP') ![GitHub License](https://img.shields.io/github/license/dunward/unity-mcp-template)
+![](https://badge.mcpx.dev 'MCP') ![GitHub License](https://img.shields.io/github/license/dunward/unity-mcp-template) [![smithery badge](https://smithery.ai/badge/@dunward/unity-mcp-template1)](https://smithery.ai/server/@dunward/unity-mcp-template1)
 # Unity MCP Template
 ![mcp-template-ezgif com-resize](https://github.com/user-attachments/assets/eb51b904-3301-4c88-9f7d-8ca3333024f3)
 
@@ -17,6 +17,14 @@ within the unity-mcp-server
 ```
 npm install
 npm run build
+```
+
+### Installing via Smithery
+
+To install unity-mcp-template1 for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@dunward/unity-mcp-template1):
+
+```bash
+npx -y @smithery/cli install @dunward/unity-mcp-template1 --client claude
 ```
 
 ### Add MCP in Claude Desktop
